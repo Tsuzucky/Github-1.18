@@ -4,22 +4,25 @@ import sys
 import wiringpi
 from random import randint
 from PIL import ImageFont
+SW1=5
+wiringpi.wiringPiSetupGpio()
 
-print('まだ修正中')    # 自分の担当分の修正が完了したら、この行は削除しておいてください。
+wiringpi.pinMode(SW1,0)  
 
 def main():    #　main担当： 1. □マークを追加する。  2. ギリギリ○マークが勝てるようにする
     disp, image, draw = oled.oled_setup()
     fsize = 15
-    n = 1    #　この部分が〇の固定値
+    n = 4     #この部分が〇の固定値
     ifont = ImageFont.truetype('/usr/share/fonts/oled/Shinonome/Shinonome16.ttf',fsize,encoding='unic')
     
-    members = [entry(0, fsize, '〇'), entry(0, fsize*2, '△')]    #　この部分に各印（xの位置、yの位置、マーク）が格納されている
+    members = [entry(0, fsize, '〇'), entry(0, fsize*2, '△'), entry(0, fsize*3, '□')]    #　]    #　この部分に各印（xの位置、yの位置、マーク）が格納されている
     
     while True:
         make(image, draw, ifont, members)
         for m in members:
             if m.pos == fsize:
-                m.play(n)    #　〇マークの場合は固定値、それ以外は1-5のランダムな値となっている
+                if(wiringpi.digitalRead(SW1)==0):
+                    m.play(n)    #　〇マークの場合は固定値、それ以外は1-5のランダムな値となっている
             else:
                 m.rand(5)
             if m.num >= 100:    #　xの位置が100以上になるとゴール
@@ -46,6 +49,8 @@ class entry:
   
     
 def make(image, draw, ifont, members):    # make担当：x座標0に"Start"、100に"Goal"を表示する（yは0でよい）
+    draw.text((0,0),'Start' , font = ifont, fill = 255) #0行目
+    draw.text((100,0),'Goal', font = ifont, fill = 255)
     for m in members:
         draw.text((m.num,m.pos),m.mark,font=ifont,fill=255)
 
