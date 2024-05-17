@@ -7,8 +7,7 @@ from PIL import ImageFont
 SW1=5
 wiringpi.wiringPiSetupGpio()
 
-wiringpi.pinMode(SW1,0)
-print('まだ修正中')    # 自分の担当分の修正が完了したら、この行は削除しておいてください。
+wiringpi.pinMode(SW1,0)  
 
 def main():    #　main担当： 1. □マークを追加する。  2. ギリギリ○マークが勝てるようにする
     disp, image, draw = oled.oled_setup()
