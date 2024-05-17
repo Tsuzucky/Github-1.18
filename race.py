@@ -12,10 +12,12 @@ wiringpi.pinMode(SW1,0)
 def main():    #　main担当： 1. □マークを追加する。  2. ギリギリ○マークが勝てるようにする
     disp, image, draw = oled.oled_setup()
     fsize = 15
+
     n = 4     #この部分が〇の固定値
     ifont = ImageFont.truetype('/usr/share/fonts/oled/Shinonome/Shinonome16.ttf',fsize,encoding='unic')
     
-    members = [entry(0, fsize, '〇'), entry(0, fsize*2, '△'), entry(0, fsize*3, '□')]    #　]    #　この部分に各印（xの位置、yの位置、マーク）が格納されている
+    members = [entry(0, fsize, '〇'), entry(0, fsize*2, '△'), entry(0, fsize*3, '□')]    #　]    #　この部分に各印（xの位置、yの位置、マーク）が格納さ
+
     
     while True:
         make(image, draw, ifont, members)
@@ -44,8 +46,11 @@ class entry:
         self.num = self.num + randint(1,n)
     def play(self, n):
         self.num = switch(self.num, n)
-    def goal(self, draw, ifont):    # goal担当：どれかがゴールしたときに"(ゴールしたマーク） WIN !!"を表示する画面に遷移させる
-        pass    #　このpassを削除してプログラムを作成する
+    def goal(self, draw, ifont):# goal担当：どれかがゴールしたときに"(ゴールしたマーク） WIN !!"を表示する画面に遷移させる．
+        oled.oled_clear(draw)
+        win=self.mark +" WIN!!"
+        draw.text((65,0),win,font = ifont, fill = 255)
+    #　このpassを削除してプログラムを作成する
   
     
 def make(image, draw, ifont, members):    # make担当：x座標0に"Start"、100に"Goal"を表示する（yは0でよい）
